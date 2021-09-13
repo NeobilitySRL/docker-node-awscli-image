@@ -3,7 +3,7 @@
 The image was created to be used in GitLab CI/CD. It uses the following versions:
 
 - Docker 19.03.9
-- Node.js 12.16.3
+- Node.js 12.22.6
 
 Published to Docker Hub with the tag `neobility/docker:19.03.9-node-awscli`.
 
