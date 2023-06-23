@@ -33,13 +33,18 @@ RUN apk --update-cache add \
         /usr/local/aws-cli/v2/*/dist/awscli/examples \
     && apk --no-cache del \
         binutils \
-        curl \
     && rm glibc-${GLIBC_VER}.apk \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm glibc-i18n-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/* \
     && docker --version \
     && aws --version
+
+# INSTALL AWS Copilot
+
+RUN curl -sLo /usr/local/bin/copilot https://github.com/aws/copilot-cli/releases/latest/download/copilot-linux \
+   && chmod +x /usr/local/bin/copilot \
+   && copilot --version
 
 # INSTALL git
 
