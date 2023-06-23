@@ -1,9 +1,45 @@
-FROM docker:19.03.9
+FROM docker:24.0.2-cli
 
-# INSTALL awscli
+# INSTALL awscliv2
 
-RUN apk add --no-cache py-pip
-RUN pip install awscli
+# thanks to https://github.com/bentolor/docker-dind-awscli/blob/master/Dockerfile
+ARG GLIBC_VER=2.34-r0
+RUN apk --update-cache add \
+        binutils \
+        curl \
+        groff \
+        bash \
+    && sed -i 's/ash/bash/g' /etc/passwd \
+    && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
+    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk \
+    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk \
+    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-i18n-${GLIBC_VER}.apk \
+    && apk del libc6-compat \
+    && apk add --force-overwrite \
+        glibc-${GLIBC_VER}.apk \
+        glibc-bin-${GLIBC_VER}.apk \
+        glibc-i18n-${GLIBC_VER}.apk \
+    && apk fix --force-overwrite alpine-baselayout-data \
+    && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
+    && /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 \
+    && apk del --purge glibc-i18n \
+    && unzip -q awscliv2.zip \
+    && aws/install \
+    && rm -rf \
+        awscliv2.zip \
+        aws \
+        /usr/local/aws-cli/v2/*/dist/aws_completer \
+        /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
+        /usr/local/aws-cli/v2/*/dist/awscli/examples \
+    && apk --no-cache del \
+        binutils \
+        curl \
+    && rm glibc-${GLIBC_VER}.apk \
+    && rm glibc-bin-${GLIBC_VER}.apk \
+    && rm glibc-i18n-${GLIBC_VER}.apk \
+    && rm -rf /var/cache/apk/* \
+    && docker --version \
+    && aws --version
 
 # INSTALL git
 
@@ -11,7 +47,7 @@ RUN apk add --no-cache git
 
 # INSTALL node - code from https://github.com/nodejs/docker-node/blob/main/14/alpine3.16/Dockerfile
 
-ENV NODE_VERSION 14.21.1
+ENV NODE_VERSION 14.21.3
 
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
@@ -23,7 +59,7 @@ RUN addgroup -g 1000 node \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="0fc7c18a1fa7aa6b39ac7b11ba2e56fa12ab1c4d3b4bb32f9c4ac3f7178d613c" \
+          CHECKSUM="39c334bd7ef3a6e5a5a396e08b3edbe335d86161bbfba222c75aa4a3518af942" \
           ;; \
         *) ;; \
       esac \

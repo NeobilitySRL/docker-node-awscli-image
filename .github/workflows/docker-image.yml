@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     branches:
-      - 'main'
+      - 'awscliv2'
 
 jobs:
   docker:
@@ -26,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: neobility/docker:19.03.9-node-awscli
+          tags: neobility/docker:24.0.2-cli-node-awscliv2

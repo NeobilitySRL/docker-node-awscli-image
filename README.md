@@ -1,10 +1,11 @@
-## Docker Image with node & awscli
+## Docker Image with node & awscliv2
 
 The image was created to be used in GitLab CI/CD. It uses the following versions:
 
-- Docker 19.03.9
-- Node.js 14.21.1
+- Docker 24.0.2-cli
+- Node.js 14.21.3
+- AWS CLI v2 (latest)
 
-Published to Docker Hub with the tag `neobility/docker:19.03.9-node-awscli`.
+Published to Docker Hub with the tag `neobility/docker:24.0.2-cli-node-awscliv2`.
 
 https://hub.docker.com/r/neobility/docker/tags
