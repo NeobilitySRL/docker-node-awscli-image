@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'awscliv2'
+  workflow_dispatch:
 
 jobs:
   docker:
