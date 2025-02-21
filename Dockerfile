@@ -1,10 +1,5 @@
 FROM docker:19.03.9
 
-# INSTALL awscli
-
-RUN apk add --no-cache py-pip
-RUN pip install awscli
-
 # INSTALL git
 
 RUN apk add --no-cache git
